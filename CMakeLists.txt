@@ -12,7 +12,7 @@ qt_add_executable(apptedHttpApp
     main.cpp
     src/network/NetworkManager.h src/network/NetworkManager.cpp
     src/network/ConnectionManager.h src/network/ConnectionManager.cpp
-    src/network/DeviceModel.h src/network/DeviceModel.cpp
+    src/network/ConnectedDeviceModel.h src/network/ConnectedDeviceModel.cpp
 )
 
 qt_add_qml_module(apptedHttpApp

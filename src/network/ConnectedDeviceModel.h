@@ -1,5 +1,5 @@
-#ifndef DEVICEMODEL_H
-#define DEVICEMODEL_H
+#ifndef CONNECTEDDEVICEMODEL_H
+#define CONNECTEDDEVICEMODEL_H
 
 #include <QAbstractListModel>
 
@@ -14,7 +14,7 @@ private:
     QString m_ip;
 };
 
-class DeviceModel : public QAbstractListModel {
+class ConnectedDeviceModel : public QAbstractListModel {
 
     Q_OBJECT
     // Gives the size of the model.
@@ -27,12 +27,13 @@ public:
         IpRole = Qt::UserRole + 1
     };
 
-    explicit DeviceModel(QObject *parent = nullptr);
-    ~DeviceModel();
+    explicit ConnectedDeviceModel(QObject *parent = nullptr);
+    ~ConnectedDeviceModel();
 
-    void insert(int index, const QString &ip);
-    void append(const QString &ip);
-    void remove(int index);
+    Q_INVOKABLE void insert(int index, const QString &ip);
+    Q_INVOKABLE void append(const QString &ip);
+    Q_INVOKABLE void remove(int index);
+    Q_INVOKABLE void remove(const QString &ip);
 
     // QAbstractItemModel interface
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -52,4 +53,4 @@ signals:
     void countChanged(int count);
 };
 
-#endif // DEVICEMODEL_H
+#endif // CONNECTEDDEVICEMODEL_H

@@ -16,14 +16,14 @@ Window {
 
         function onConnected(ip: string) {
             addLog("connected: " + ip);
-            let connectedTED = { ip: ip };
-            listConnectedTEDsModel.append(connectedTED);
+            //let connectedTED = { ip: ip };
+            listConnectedDevicesModel.append(ip);
         }
 
         function onDisconnected(ip: string) {
             addLog("disconnected: " + ip);
-            let disconnectedTED = { ip: ip };
-            //listConnectedTEDsModel.remove() append(connectedTED);
+            //let disconnectedTED = { ip: ip };
+            listConnectedDevicesModel.remove(ip);
         }
     }
 
@@ -110,7 +110,7 @@ Window {
                 spacing: 5
                 focus: true
 
-                model: listConnectedTEDsModel
+                model: listConnectedDevicesModel
                 delegate: connectedTEDItemDelegate
                 //highlight: highlightedItemDelegate
             }
@@ -153,16 +153,16 @@ Window {
 //                }
 //            }
 
-            ListModel {
-                id: listConnectedTEDsModel
-                //ListElement { ip: "192.168.0.1" }
-                //ListElement { ip: "192.168.0.2" }
-                //ListElement { ip: "192.168.0.3" }
-            }
-
-//            DeviceModel {
-//                id : listConnectedTEDsModel
+//            ListModel {
+//                id: listConnectedDevicesModel
+//                //ListElement { ip: "192.168.0.1" }
+//                //ListElement { ip: "192.168.0.2" }
+//                //ListElement { ip: "192.168.0.3" }
 //            }
+
+            ConnectedDeviceModel {
+                id : listConnectedDevicesModel
+            }
         }
     }
 

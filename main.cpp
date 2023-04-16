@@ -1,13 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "src/network/NetworkManager.h"
-#include "src/network/DeviceModel.h"
+#include "src/network/ConnectedDeviceModel.h"
 
 void bindQmlTypes() {
 
-    // Register the type DeviceModel under the url "org.example" in version 1.0
+    // Register the type ConnectedDeviceModel under the url "org.example" in version 1.0
     // under the name "DataEntryModel"
-    qmlRegisterType<DeviceModel>("br.com.colleter.ted", 1, 0, "DeviceModel");
+    qmlRegisterType<ConnectedDeviceModel>("br.com.colleter.ted", 1, 0, "ConnectedDeviceModel");
 
     qmlRegisterSingletonType<NetworkManager>(
         "br.com.colleter.ted", 1, 0, "NetworkManager",

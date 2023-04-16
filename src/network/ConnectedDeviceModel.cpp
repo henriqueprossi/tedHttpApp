@@ -1,4 +1,5 @@
-#include "DeviceModel.h"
+#include "ConnectedDeviceModel.h"
+#include <QDebug>
 
 Device::Device(const QString &ip)
     : m_ip(ip) {
@@ -10,7 +11,7 @@ QString Device::ip() const {
     return m_ip;
 }
 
-Device DeviceModel::get(int index) {
+Device ConnectedDeviceModel::get(int index) {
 
     if ((index < 0) || (index > m_devices.count())) {
         return Device("");
@@ -18,16 +19,18 @@ Device DeviceModel::get(int index) {
     return m_devices.at(index);
 }
 
-DeviceModel::DeviceModel(QObject *parent)
+ConnectedDeviceModel::ConnectedDeviceModel(QObject *parent)
     : QAbstractListModel(parent) {
 
+    qDebug() << "ConnectedDeviceModel constructor";
 }
 
-DeviceModel::~DeviceModel() {
+ConnectedDeviceModel::~ConnectedDeviceModel() {
 
+    qDebug() << "ConnectedDeviceModel destructor";
 }
 
-void DeviceModel::insert(int index, const QString &ip) {
+void ConnectedDeviceModel::insert(int index, const QString &ip) {
 
     if ((index < 0) || (index > m_devices.count())) {
         return;
@@ -43,39 +46,49 @@ void DeviceModel::insert(int index, const QString &ip) {
     emit countChanged(m_devices.count());
 }
 
-//void DeviceModel::addDevice(const Device &device) {
+//void ConnectedDeviceModel::addDevice(const Device &device) {
 
 //    beginInsertRows(QModelIndex(), rowCount(), rowCount());
 //    m_devices << device;
 //    endInsertRows();
 //}
 
-void DeviceModel::append(const QString &ip) {
+void ConnectedDeviceModel::append(const QString &ip) {
 
     insert(count(), ip);
 }
 
-void DeviceModel::remove(int index) {
+void ConnectedDeviceModel::remove(int index) {
 
     if ((index < 0) || (index >= m_devices.count())) {
         return;
     }
 
-    emit beginRemoveRows(QModelIndex(), index, index);
+    beginRemoveRows(QModelIndex(), index, index);
     m_devices.removeAt(index);
-    emit endRemoveRows();
+    endRemoveRows();
 
     // Update our count property.
     emit countChanged(m_devices.count());
 }
 
-int DeviceModel::rowCount(const QModelIndex &parent) const {
+void ConnectedDeviceModel::remove(const QString &ip) {
+
+    for (int index = 0; index < m_devices.count(); index++) {
+        if (m_devices.at(index).ip() == ip) {
+            remove(index);
+            break;
+        }
+    }
+}
+
+int ConnectedDeviceModel::rowCount(const QModelIndex &parent) const {
 
     Q_UNUSED(parent);
     return m_devices.count();
 }
 
-QVariant DeviceModel::data(const QModelIndex &index, int role) const {
+QVariant ConnectedDeviceModel::data(const QModelIndex &index, int role) const {
 
     // The index returns the requested row and column information. We ignore
     // the column and only use the row information.
@@ -98,7 +111,7 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-QHash<int, QByteArray> DeviceModel::roleNames() const {
+QHash<int, QByteArray> ConnectedDeviceModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[IpRole] = "ip";

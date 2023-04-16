@@ -66,6 +66,7 @@ void ConnectionManager::addConnectedDevice(const QString ip) {
 
     QObject::connect(device, &ConnectedDevice::disconnected, this, [this, device]() {
         emit disconnected(device->getIp());
+        m_connectedDevices.removeAll(device);
         delete device;
     });
 
