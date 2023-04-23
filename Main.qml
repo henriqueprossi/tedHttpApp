@@ -7,22 +7,28 @@ Window {
     id: root
 
     width: 640
-    height: 480
+    height: 800
     visible: true
     title: qsTr("Aplicação de testes do TED HTTP")
 
+    function addLog(logText: string) {
+        let log = {
+            text: logText
+        }
+        listLogsModel.append(log);
+        listViewLogs.currentIndex = listViewLogs.count - 1
+    }
+
     Connections {
-        target: NetworkManager
+        target: TedManager
 
         function onConnected(ip: string) {
             addLog("connected: " + ip);
-            //let connectedTED = { ip: ip };
             listConnectedDevicesModel.append(ip);
         }
 
         function onDisconnected(ip: string) {
             addLog("disconnected: " + ip);
-            //let disconnectedTED = { ip: ip };
             listConnectedDevicesModel.remove(ip);
         }
     }
@@ -54,6 +60,12 @@ Window {
 
         onStateChanged: {
             addLog("state changed to: " + state);
+
+            if (state === "stateAcceptConnections") {
+                TedManager.startMonitoringConnection();
+            } else {
+                TedManager.stopMonitoringConnection();
+            }
         }
 
         Button {
@@ -77,7 +89,7 @@ Window {
 
         Label {
             id: txtConnectedTEDs
-            //text: (listViewConnectedTEDs.count === 0) ? "TEDs conectados:" : "TEDs conectados (selecione um IP):"
+
             text: "TEDs conectados:"
 
             color: "black"
@@ -112,13 +124,14 @@ Window {
 
                 model: listConnectedDevicesModel
                 delegate: connectedTEDItemDelegate
-                //highlight: highlightedItemDelegate
             }
 
             Component {
                 id: connectedTEDItemDelegate
+
                 Rectangle {
                     id: tedItem
+
                     required property int index
                     required property string ip
 
@@ -144,21 +157,6 @@ Window {
                     }
                 }
             }
-
-//            Component {
-//                id: highlightedItemDelegate
-//                Rectangle {
-//                    color: "lightsteelblue"
-//                    width: ListView.view ? ListView.view.width : 0
-//                }
-//            }
-
-//            ListModel {
-//                id: listConnectedDevicesModel
-//                //ListElement { ip: "192.168.0.1" }
-//                //ListElement { ip: "192.168.0.2" }
-//                //ListElement { ip: "192.168.0.3" }
-//            }
 
             ConnectedDeviceModel {
                 id : listConnectedDevicesModel
@@ -196,6 +194,7 @@ Window {
 
         Component {
             id: logItemDelegate
+
             Item {
                 id: logItem
                 required property string text
@@ -216,6 +215,7 @@ Window {
 
         Component {
             id: highlightedLogDelegate
+
             Rectangle {
                 color: "cornsilk"
                 width: ListView.view ? ListView.view.width : 0
@@ -223,15 +223,77 @@ Window {
         }
     }
 
-    function addLog(logText: string) {
-        let log = {
-            text: logText
+    Rectangle {
+        id: rectCommands
+
+        width: parent.width
+        height: 200
+
+        enabled: (listViewConnectedTEDs.currentIndex !== -1)
+
+        anchors.top: rectLogs.bottom
+        anchors.topMargin: 10
+
+        anchors.left: rectLogs.left
+        anchors.leftMargin: 10
+
+        Label {
+            id: txtCommands
+
+            text: "Comandos:"
+
+            color: "black"
+
+            anchors.top: parent.top
+            anchors.topMargin: 10
+            anchors.left: parent.left
         }
-        listLogsModel.append(log);
-        listViewLogs.currentIndex = listViewLogs.count - 1
+
+        Button {
+            id: btnSendTextToTed
+
+            width: 300
+            height: 50
+
+            anchors.top: txtCommands.bottom
+            anchors.topMargin: 10
+
+            text: "Enviar texto"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.sendTextToTed(ip, 8090, txtEditSendTextToTed.text);
+            }
+        }
+
+        TextEdit {
+            id: txtEditSendTextToTed
+
+            anchors.top: btnSendTextToTed.bottom
+            anchors.topMargin: 10
+
+            cursorVisible: true
+
+            text: "Digite aqui o texto"
+        }
+
+        Button {
+            id: btnClearDisplay
+
+            width: 300
+            height: 50
+
+            anchors.top: txtEditSendTextToTed.bottom
+            anchors.topMargin: 10
+
+            text: "Limpar display"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.clearDisplay(ip, 8090);
+            }
+        }
     }
-
-//    function findConnectedDevice(ip: string) {
-
-//    }
 }

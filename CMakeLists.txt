@@ -4,21 +4,34 @@ project(tedHttpApp VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Core Quick Network)
 
 qt_standard_project_setup()
 
 qt_add_executable(apptedHttpApp
     main.cpp
-    src/network/NetworkManager.h src/network/NetworkManager.cpp
-    src/network/ConnectionManager.h src/network/ConnectionManager.cpp
-    src/network/ConnectedDeviceModel.h src/network/ConnectedDeviceModel.cpp
+    src/TedManager.h src/TedManager.cpp
+    src/network/client/RequestManager.h src/network/client/RequestManager.cpp
+    src/network/client/TedClientInterface.h src/network/client/TedClientInterface.cpp
+    src/network/client/http/Request.h src/network/client/http/Request.cpp
+    src/network/client/http/RequestSendTextToTed.h src/network/client/http/RequestSendTextToTed.cpp
+    src/network/connection/ConnectionManager.h src/network/connection/ConnectionManager.cpp
+    src/network/connection/ConnectedDeviceModel.h src/network/connection/ConnectedDeviceModel.cpp
+    src/utils/Log.h src/utils/Log.cpp
 )
 
 qt_add_qml_module(apptedHttpApp
     URI tedHttpApp
     VERSION 1.0
     QML_FILES Main.qml
+)
+
+include_directories(
+    src
+    src/network/connection
+    src/network/client
+    src/network/client/http
+    src/utils
 )
 
 set_target_properties(apptedHttpApp PROPERTIES
@@ -29,8 +42,9 @@ set_target_properties(apptedHttpApp PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(apptedHttpApp
-    PRIVATE Qt6::Quick
+target_link_libraries(apptedHttpApp PRIVATE
+    Qt6::Quick
+    Qt6::Network
 )
 
 install(TARGETS apptedHttpApp

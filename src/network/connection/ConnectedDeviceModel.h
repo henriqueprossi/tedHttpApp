@@ -7,6 +7,7 @@ class Device {
 
 public:
     Device(const QString &ip);
+    ~Device();
 
     QString ip() const;
 

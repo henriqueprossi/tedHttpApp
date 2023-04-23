@@ -1,8 +1,11 @@
 #include "ConnectionManager.h"
+#include "Log.h"
 #include <QUdpSocket>
 
 ConnectedDevice::ConnectedDevice(const QString ip, const quint32 keepAliveTimeoutMs, QObject *parent) :
     QObject(parent) {
+
+    Log::instance().log("ConnectedDevice", "constructor");
 
     m_deviceIp = ip;
     m_keepAliveTimeoutMs = keepAliveTimeoutMs;
@@ -16,12 +19,7 @@ ConnectedDevice::ConnectedDevice(const QString ip, const quint32 keepAliveTimeou
 
 ConnectedDevice::~ConnectedDevice() {
 
-    qDebug() << "ConnectedDevice destructor";
-}
-
-void ConnectedDevice::refreshKeepAliveTimeout() {
-
-    m_keepAliveTimer->start(m_keepAliveTimeoutMs);
+    Log::instance().log("ConnectedDevice", "destructor");
 }
 
 QString ConnectedDevice::getIp() const {
@@ -29,20 +27,25 @@ QString ConnectedDevice::getIp() const {
     return m_deviceIp;
 }
 
+void ConnectedDevice::refreshKeepAliveTimeout() {
+
+    m_keepAliveTimer->start(m_keepAliveTimeoutMs);
+}
+
 ConnectionManager::ConnectionManager(QObject *parent)
-    : QObject{parent} {
+    : QObject(parent) {
 
-    m_udpSocket = new QUdpSocket(this);
+    Log::instance().log("ConnectionManager", "constructor");
 
-    // Bind the UDP socket to an address and a port
-    m_udpSocket->bind(QHostAddress::Any, 55555);
-
-    QObject::connect(m_udpSocket, &QUdpSocket::readyRead, this, &ConnectionManager::readyRead);
+    m_udpSocket = nullptr;
+    m_connectedDevices.clear();
 }
 
 ConnectionManager::~ConnectionManager() {
 
-    qDebug() << "ConnectionManager destructor";
+    Log::instance().log("ConnectionManager", "destructor");
+
+    stop();
 }
 
 bool ConnectionManager::sendConnectedReply(const QHostAddress &host, quint16 port) {
@@ -62,7 +65,7 @@ bool ConnectionManager::sendConnectedReply(const QHostAddress &host, quint16 por
 
 void ConnectionManager::addConnectedDevice(const QString ip) {
 
-    ConnectedDevice *device = new ConnectedDevice(ip, KEEP_ALIVE_TIMEOUT_MS);
+    ConnectedDevice *device = new ConnectedDevice(ip, WAIT_KEEP_ALIVE_TIMEOUT_MS);
 
     QObject::connect(device, &ConnectedDevice::disconnected, this, [this, device]() {
         emit disconnected(device->getIp());
@@ -75,6 +78,16 @@ void ConnectionManager::addConnectedDevice(const QString ip) {
     device->refreshKeepAliveTimeout();
 
     emit connected(ip);
+}
+
+void ConnectionManager::disconnectAllDevices() {
+
+    for (const auto &device : m_connectedDevices) {
+        emit disconnected(device->getIp());
+        delete device;
+    }
+
+    m_connectedDevices.clear();
 }
 
 ConnectedDevice *ConnectionManager::findConnectedDevice(const QString ip) {
@@ -112,5 +125,51 @@ void ConnectionManager::readyRead() {
         } else {
             device->refreshKeepAliveTimeout();
         }
+    }
+}
+
+void ConnectionManager::start() {
+
+    Log::instance().log("ConnectionManager", "start");
+
+    if (m_udpSocket != nullptr) {
+        Log::instance().log("ConnectionManager", "udp socket already created!");
+        return;
+    }
+
+    Log::instance().log("ConnectionManager", "starting UDP socket...");
+
+    m_udpSocket = new QUdpSocket();
+
+    QObject::connect(m_udpSocket, &QUdpSocket::readyRead, this, &ConnectionManager::readyRead);
+
+    // Bind the UDP socket to an address and a port
+    m_udpSocket->bind(QHostAddress::Any, CONNECTION_PORT);
+}
+
+void ConnectionManager::stop() {
+
+    Log::instance().log("ConnectionManager", "stop");
+
+    if (m_udpSocket == nullptr) {
+        Log::instance().log("ConnectionManager", "udp socket not created yet!");
+        return;
+    }
+
+    Log::instance().log("ConnectionManager", "stopping UDP socket...");
+
+    m_udpSocket->close();
+
+    disconnectAllDevices();
+
+    delete m_udpSocket;
+    m_udpSocket = nullptr;
+}
+
+void ConnectionManager::processDataReceivedFrom(QString ip) {
+
+    ConnectedDevice *device = findConnectedDevice(ip);
+    if (device != nullptr) {
+        device->refreshKeepAliveTimeout();
     }
 }

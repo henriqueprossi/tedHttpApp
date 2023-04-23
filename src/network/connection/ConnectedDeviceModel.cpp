@@ -1,8 +1,11 @@
 #include "ConnectedDeviceModel.h"
-#include <QDebug>
 
 Device::Device(const QString &ip)
     : m_ip(ip) {
+
+}
+
+Device::~Device() {
 
 }
 
@@ -22,12 +25,10 @@ Device ConnectedDeviceModel::get(int index) {
 ConnectedDeviceModel::ConnectedDeviceModel(QObject *parent)
     : QAbstractListModel(parent) {
 
-    qDebug() << "ConnectedDeviceModel constructor";
 }
 
 ConnectedDeviceModel::~ConnectedDeviceModel() {
 
-    qDebug() << "ConnectedDeviceModel destructor";
 }
 
 void ConnectedDeviceModel::insert(int index, const QString &ip) {

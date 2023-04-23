@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "src/network/NetworkManager.h"
-#include "src/network/ConnectedDeviceModel.h"
+#include "TedManager.h"
+#include "ConnectedDeviceModel.h"
 
 void bindQmlTypes() {
 
@@ -9,13 +9,13 @@ void bindQmlTypes() {
     // under the name "DataEntryModel"
     qmlRegisterType<ConnectedDeviceModel>("br.com.colleter.ted", 1, 0, "ConnectedDeviceModel");
 
-    qmlRegisterSingletonType<NetworkManager>(
-        "br.com.colleter.ted", 1, 0, "NetworkManager",
+    qmlRegisterSingletonType<TedManager>(
+        "br.com.colleter.ted", 1, 0, "TedManager",
         [](QQmlEngine *engine, QJSEngine *scriptEngine) -> QObject * {
             Q_UNUSED(engine)
             Q_UNUSED(scriptEngine)
 
-            NetworkManager *instance = &NetworkManager::instance();
+            TedManager *instance = &TedManager::instance();
             return instance;
         });
 }
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         Qt::QueuedConnection);
     engine.load(url);
 
-    NetworkManager::instance();
+    TedManager::instance();
 
     return app.exec();
 }
