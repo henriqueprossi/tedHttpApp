@@ -34,6 +34,8 @@ void RequestManager::sendTextToTed(QString ip, quint16 port, QString text) {
 
     if (result == RequestResult::ResultStatus::RES_SUCCESS) {
         emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
     }
 }
 
@@ -53,5 +55,7 @@ void RequestManager::clearDisplay(QString ip, quint16 port) {
 
     if (result == RequestResult::ResultStatus::RES_SUCCESS) {
         emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
     }
 }

@@ -19,6 +19,7 @@ private:
 
 signals:
     void replyReceived(QString ip, QString body);
+    void replyTimeout(QString ip);
 
 public slots:
     void sendTextToTed(QString ip, quint16 port, QString text);

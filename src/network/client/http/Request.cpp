@@ -25,6 +25,7 @@ RequestResult::ResultStatus Request::send(QString &replyBody) {
 
     QEventLoop eventLoop;
     QTimer timeoutTimer;
+    bool timeout = false;
 
     QNetworkRequest request;
     QString url = "http://" + m_ip + ":" + QString::number(m_port);
@@ -35,8 +36,10 @@ RequestResult::ResultStatus Request::send(QString &replyBody) {
     connect(m_netManager, &QNetworkAccessManager::finished,
             &eventLoop, &QEventLoop::quit);
 
-    connect(&timeoutTimer, &QTimer::timeout,
-            &eventLoop, &QEventLoop::quit);
+    connect(&timeoutTimer, &QTimer::timeout, this, [&]() {
+        timeout = true;
+        eventLoop.quit();
+    });
 
     timeoutTimer.setInterval(REQUEST_TIMEOUT_MS);
     timeoutTimer.setSingleShot(true);
@@ -53,7 +56,14 @@ RequestResult::ResultStatus Request::send(QString &replyBody) {
 
     QNetworkReply::NetworkError result = reply->error() ;
 
-    if (result == QNetworkReply::NoError) {
+    if (timeout || (result != QNetworkReply::NoError)) {
+
+        Log::instance().log("Request", "Reply error! error: " + QString::number(result) + ", timeout: " + QString::number(timeout));
+
+        return RequestResult::ResultStatus::RES_FAIL;
+
+    } else {
+
         int code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
 
         replyBody = QString(reply->readAll());
@@ -64,10 +74,6 @@ RequestResult::ResultStatus Request::send(QString &replyBody) {
 
         return RequestResult::ResultStatus::RES_SUCCESS;
     }
-
-    Log::instance().log("Request", "Reply error! error: " + QString::number(result));
-
-    return RequestResult::ResultStatus::RES_FAIL;
 }
 
 //void Request::replyFinished() {

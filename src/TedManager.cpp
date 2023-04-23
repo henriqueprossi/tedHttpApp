@@ -53,6 +53,7 @@ TedManager::TedManager(QObject *parent)
 
 void TedManager::processReplyReceived(QString ip, QString body) {
 
+    emit replyReceived(ip, body);
     emit dataReceivedFrom(ip);
 }
 
@@ -89,6 +90,7 @@ void TedManager::requestManagerInit() {
     connect(this, &TedManager::reqSendTextToTed, m_reqManager, &RequestManager::sendTextToTed);
     connect(this, &TedManager::reqClearDisplay, m_reqManager, &RequestManager::clearDisplay);
     connect(m_reqManager, &RequestManager::replyReceived, this, &TedManager::processReplyReceived);
+    connect(m_reqManager, &RequestManager::replyTimeout, this, &TedManager::replyTimeout);
     m_reqManagerThread.start();
 }
 

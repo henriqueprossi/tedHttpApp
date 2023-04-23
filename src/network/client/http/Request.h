@@ -32,7 +32,7 @@ public:
 
 private:
     enum {
-        REQUEST_TIMEOUT_MS = 30000
+        REQUEST_TIMEOUT_MS = 5000
     };
 
     QNetworkAccessManager *m_netManager;

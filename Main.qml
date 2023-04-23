@@ -19,6 +19,39 @@ Window {
         listViewLogs.currentIndex = listViewLogs.count - 1
     }
 
+    function onCommandSent(ip: string) {
+        addLog("command sent to " + ip);
+        popupWaitReply.open();
+    }
+
+    function onCommandReply(ip: string, body: string) {
+        addLog("reply received from " + ip + ", body: " + body);
+        popupWaitReply.close();
+    }
+
+    function onCommandTimeout(ip: string) {
+        addLog("reply timeout from " + ip);
+        popupWaitReply.close();
+    }
+
+    Popup {
+        id: popupWaitReply
+
+        width: 100
+        height: 100
+        anchors.centerIn: parent
+
+        modal: true
+        closePolicy: Popup.NoAutoClose
+        visible: false
+
+        BusyIndicator {
+            id: busyWaitReply
+            running: popupWaitReply.opened
+            anchors.fill: parent
+        }
+    }
+
     Connections {
         target: TedManager
 
@@ -30,6 +63,14 @@ Window {
         function onDisconnected(ip: string) {
             addLog("disconnected: " + ip);
             listConnectedDevicesModel.remove(ip);
+        }
+
+        function onReplyReceived(ip: string, body: string) {
+            onCommandReply(ip, body);
+        }
+
+        function onReplyTimeout(ip: string) {
+            onCommandTimeout(ip);
         }
     }
 
@@ -264,6 +305,8 @@ Window {
                 let activeConnectedTed = listViewConnectedTEDs.currentItem;
                 let ip = activeConnectedTed.ip;
                 TedManager.sendTextToTed(ip, 8090, txtEditSendTextToTed.text);
+
+                onCommandSent(ip);
             }
         }
 
@@ -293,6 +336,8 @@ Window {
                 let activeConnectedTed = listViewConnectedTEDs.currentItem;
                 let ip = activeConnectedTed.ip;
                 TedManager.clearDisplay(ip, 8090);
+
+                onCommandSent(ip);
             }
         }
     }

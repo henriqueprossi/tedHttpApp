@@ -49,6 +49,8 @@ signals:
     void disconnected(QString ip);
 
     void dataReceivedFrom(QString ip);
+    void replyReceived(QString ip, QString body);
+    void replyTimeout(QString ip);
 
     // Requests relative to Connection API.
     void reqConnectionStart();
