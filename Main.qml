@@ -6,8 +6,13 @@ import br.com.colleter.ted
 Window {
     id: root
 
-    width: 640
-    height: 800
+    property int propBorderMargin: 5
+    property int propButtonHeight: 40
+    property int propButtonWidth: 200
+    property color propBorderColor: "#21be2b"
+
+    width: 900
+    height: 720
     visible: true
     title: qsTr("Aplicação de testes do TED HTTP")
 
@@ -72,13 +77,19 @@ Window {
         function onReplyTimeout(ip: string) {
             onCommandTimeout(ip);
         }
+
+        function onReplyReceivedReadDigitalInput(value: int) {
+            txtDigitalInputValue.text = value;
+        }
     }
 
     Rectangle {
         id: rectConnection
 
         width: parent.width
-        height: 200
+        height: 110
+
+        //border.color: propBorderColor
 
         state: "stateBlockConnections"
 
@@ -113,10 +124,10 @@ Window {
             id: btnAcceptBlockConnections
 
             width: 200
-            height: 100
+            height: 50
 
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: propBorderMargin
             anchors.verticalCenter: parent.verticalCenter
 
             onClicked: {
@@ -136,7 +147,7 @@ Window {
             color: "black"
 
             anchors.top: parent.top
-            anchors.topMargin: 10
+            anchors.topMargin: propBorderMargin
             anchors.left: rectConnectedTEDs.left
         }
 
@@ -144,21 +155,21 @@ Window {
             id: rectConnectedTEDs
 
             width: 400
-            height: 150
+            height: 80
 
             anchors.top: txtConnectedTEDs.bottom
-            anchors.topMargin: 10
+            anchors.topMargin: propBorderMargin
             anchors.right: parent.right
-            anchors.rightMargin: 10
+            anchors.rightMargin: propBorderMargin
 
-            border.color: "black"
-            border.width: 1
+            border.color: propBorderColor //"black"
+            //border.width: 1
 
             ListView {
                 id: listViewConnectedTEDs
 
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: propBorderMargin
                 clip: true
                 spacing: 5
                 focus: true
@@ -193,7 +204,7 @@ Window {
                         anchors.fill: parent
                         onClicked: {
                             listViewConnectedTEDs.currentIndex = tedItem.index
-                            addLog("clicked: " + tedItem.index + ", current item: " + listViewConnectedTEDs.currentIndex);
+                            //addLog("clicked: " + tedItem.index + ", current item: " + listViewConnectedTEDs.currentIndex);
                         }
                     }
                 }
@@ -205,23 +216,39 @@ Window {
         }
     }
 
+    Label {
+        id: txtLogs
+
+        text: "Logs:"
+
+        color: "black"
+
+        anchors.top: rectConnection.bottom
+        anchors.topMargin: propBorderMargin
+        anchors.left: rectLogs.left
+    }
+
     Rectangle {
         id: rectLogs
 
         width: parent.width
-        height: 200
+        height: 100
 
-        anchors.top: rectConnection.bottom
-        anchors.topMargin: 5
+        anchors.top: txtLogs.bottom
+        anchors.topMargin: propBorderMargin
+        anchors.left: parent.left
+        anchors.leftMargin: propBorderMargin
+        anchors.right: parent.right
+        anchors.rightMargin: propBorderMargin
 
-        border.color: "black"
-        border.width: 1
+        border.color: propBorderColor //"black"
+        //border.width: 1
 
         ListView {
             id: listViewLogs
 
             anchors.fill: parent
-            anchors.margins: 10
+            anchors.margins: propBorderMargin
             clip: true
             spacing: 1
             currentIndex: -1
@@ -245,7 +272,8 @@ Window {
 
                 Text {
                     anchors.left: parent.left
-                    text: "log: " + logItem.text
+                    text: logItem.text
+                    color: "lightseagreen"
                 }
             }
         }
@@ -264,71 +292,89 @@ Window {
         }
     }
 
+    Label {
+        id: txtCommands
+
+        text: "Comandos:"
+
+        color: "black"
+
+        anchors.top: rectLogs.bottom
+        anchors.topMargin: propBorderMargin
+        anchors.left: parent.left
+        anchors.leftMargin: propBorderMargin
+    }
+
     Rectangle {
         id: rectCommands
 
         width: parent.width
-        height: 200
+        height: 410
+
+        anchors.top: txtCommands.bottom
+        anchors.topMargin: propBorderMargin
+        anchors.left: parent.left
+        anchors.leftMargin: propBorderMargin
+        anchors.right: parent.right
+        anchors.rightMargin: propBorderMargin
+
+        border.color: propBorderColor
 
         enabled: (listViewConnectedTEDs.currentIndex !== -1)
-
-        anchors.top: rectLogs.bottom
-        anchors.topMargin: 10
-
-        anchors.left: rectLogs.left
-        anchors.leftMargin: 10
-
-        Label {
-            id: txtCommands
-
-            text: "Comandos:"
-
-            color: "black"
-
-            anchors.top: parent.top
-            anchors.topMargin: 10
-            anchors.left: parent.left
-        }
 
         Button {
             id: btnSendTextToTed
 
-            width: 300
-            height: 50
+            width: propButtonWidth
+            height: propButtonHeight
 
-            anchors.top: txtCommands.bottom
-            anchors.topMargin: 10
+            anchors.top: parent.top
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
 
             text: "Enviar texto"
 
             onClicked: {
                 let activeConnectedTed = listViewConnectedTEDs.currentItem;
                 let ip = activeConnectedTed.ip;
-                TedManager.sendTextToTed(ip, 8090, txtEditSendTextToTed.text);
+                TedManager.sendTextToTed(ip, 8090, txtAreaSendTextToTed.text);
 
                 onCommandSent(ip);
             }
         }
 
-        TextEdit {
-            id: txtEditSendTextToTed
+        TextArea {
+            id: txtAreaSendTextToTed
 
-            anchors.top: btnSendTextToTed.bottom
-            anchors.topMargin: 10
+            width: 200
+            height: btnSendTextToTed.height
 
-            cursorVisible: true
+            anchors.verticalCenter: btnSendTextToTed.verticalCenter
+            anchors.left: btnSendTextToTed.right
+            anchors.leftMargin: propBorderMargin
 
-            text: "Digite aqui o texto"
+            verticalAlignment: TextEdit.AlignVCenter
+            color: "black"
+            //cursorVisible: true
+            wrapMode: TextEdit.Wrap
+            placeholderText: "Digite aqui o texto"
+
+            background: Rectangle {
+                border.color: txtAreaSendTextToTed.enabled ? propBorderColor : "transparent"
+            }
         }
 
         Button {
             id: btnClearDisplay
 
-            width: 300
-            height: 50
+            width: propButtonWidth
+            height: propButtonHeight
 
-            anchors.top: txtEditSendTextToTed.bottom
-            anchors.topMargin: 10
+            anchors.top: btnSendTextToTed.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
 
             text: "Limpar display"
 
@@ -338,6 +384,419 @@ Window {
                 TedManager.clearDisplay(ip, 8090);
 
                 onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnBeepInit
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnClearDisplay.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Beep de inicialização"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.beepInit(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnBeeps
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnBeepInit.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Emitir beeps"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.beeps(ip, 8090, spinBeeps.value);
+
+                onCommandSent(ip);
+            }
+        }
+
+        SpinBox {
+            id: spinBeeps
+
+            width: 100
+            height: btnBeeps.height
+
+            anchors.verticalCenter: btnBeeps.verticalCenter
+            anchors.left: btnBeeps.right
+            anchors.leftMargin: propBorderMargin
+
+            from: 1
+            to: 255
+            stepSize: 1
+            value: 1
+        }
+
+        Button {
+            id: btnSendToCOM1
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnBeeps.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Enviar para COM1"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.sendToCOM1(ip, 8090, txtAreaSendToCOM1.text);
+
+                onCommandSent(ip);
+            }
+        }
+
+        TextArea {
+            id: txtAreaSendToCOM1
+
+            width: 200
+            height: btnSendToCOM1.height
+
+            anchors.verticalCenter: btnSendToCOM1.verticalCenter
+            anchors.left: btnSendToCOM1.right
+            anchors.leftMargin: propBorderMargin
+
+            verticalAlignment: TextEdit.AlignVCenter
+            color: "black"
+            //cursorVisible: true
+            wrapMode: TextEdit.Wrap
+            placeholderText: "Digite aqui o texto"
+
+            background: Rectangle {
+                border.color: txtAreaSendToCOM1.enabled ? propBorderColor : "transparent"
+            }
+        }
+
+        Button {
+            id: btnSendToCOM2
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnSendToCOM1.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Enviar para COM2"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.sendToCOM2(ip, 8090, txtAreaSendToCOM2.text);
+
+                onCommandSent(ip);
+            }
+        }
+
+        TextArea {
+            id: txtAreaSendToCOM2
+
+            width: 200
+            height: btnSendToCOM2.height
+
+            anchors.verticalCenter: btnSendToCOM2.verticalCenter
+            anchors.left: btnSendToCOM2.right
+            anchors.leftMargin: propBorderMargin
+
+            verticalAlignment: TextEdit.AlignVCenter
+            color: "black"
+            //cursorVisible: true
+            wrapMode: TextEdit.Wrap
+            placeholderText: "Digite aqui o texto"
+
+            background: Rectangle {
+                border.color: txtAreaSendToCOM2.enabled ? propBorderColor : "transparent"
+            }
+        }
+
+        Button {
+            id: btnReadDigitalInput
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnSendToCOM2.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Ler entrada digital"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.readDigitalInput(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Text {
+            id: txtDigitalInputValue
+
+            width: 50
+            height: btnReadDigitalInput.height
+
+            anchors.verticalCenter: btnReadDigitalInput.verticalCenter
+            anchors.left: btnReadDigitalInput.right
+            anchors.leftMargin: propBorderMargin
+
+            verticalAlignment: TextEdit.AlignVCenter
+            horizontalAlignment: TextEdit.AlignHCenter
+            color: "black"
+            text: "-"
+        }
+
+        Button {
+            id: btnDigitalInputOn
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnReadDigitalInput.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Ligar saída digital"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.turnOnDigitalInput(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnDigitalInputOff
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnDigitalInputOn.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: parent.left
+            anchors.leftMargin: propBorderMargin
+
+            text: "Desligar saída digital"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.turnOffDigitalInput(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        //-----------------
+
+        Button {
+            id: btnClearShortcutMenu
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: parent.top
+            anchors.topMargin: propBorderMargin
+            anchors.left: txtAreaSendTextToTed.right
+            anchors.leftMargin: propBorderMargin * 2
+
+            text: "Limpar menu de atalhos"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.clearShortcutMenu(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnAddShortcutPage
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors.top: btnClearShortcutMenu.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: btnClearShortcutMenu.left
+
+            text: "Adicionar página..."
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.addPageToShortcutMenu(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Label {
+            id: txtPageContents
+
+            text: "Conteúdo da página:"
+
+            color: "black"
+
+            anchors.top: btnAddShortcutPage.top
+            anchors.left: btnAddShortcutPage.right
+            anchors.leftMargin: propBorderMargin
+        }
+
+        Rectangle {
+
+            id: rectPages
+
+            width: 250
+            height: 330
+
+            anchors.top: txtPageContents.bottom
+            anchors.topMargin: propBorderMargin
+            anchors.left: txtPageContents.left
+
+            border.color: propBorderColor
+
+            enabled: (listViewConnectedTEDs.currentIndex !== -1)
+
+            TextEdit {
+                id: txtAddShortcutPageLine1
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: parent.top
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "1 15 caracteres"
+            }
+
+            TextEdit {
+                id: txtAddShortcutPageLine2
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: txtAddShortcutPageLine1.bottom
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "2 15 caracteres"
+            }
+
+            TextEdit {
+                id: txtAddShortcutPageLine3
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: txtAddShortcutPageLine2.bottom
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "3 15 caracteres"
+            }
+
+            TextEdit {
+                id: txtAddShortcutPageLine4
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: txtAddShortcutPageLine3.bottom
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "4 15 caracteres"
+            }
+
+            TextEdit {
+                id: txtAddShortcutPageLine5
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: txtAddShortcutPageLine4.bottom
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "5 15 caracteres"
+            }
+
+            TextEdit {
+                id: txtAddShortcutPageLine6
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: txtAddShortcutPageLine5.bottom
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "6 15 caracteres"
+            }
+
+            TextEdit {
+                id: txtAddShortcutPageLine7
+
+                width: 50
+                height: btnAddShortcutPage.height
+
+                anchors.top: txtAddShortcutPageLine6.bottom
+                anchors.topMargin: propBorderMargin
+                anchors.left: parent.left
+                anchors.leftMargin: propBorderMargin
+
+                verticalAlignment: TextEdit.AlignVCenter
+
+                text: "7 15 caracteres"
             }
         }
     }

@@ -12,9 +12,6 @@ qt_add_executable(apptedHttpApp
     main.cpp
     src/TedManager.h src/TedManager.cpp
     src/network/client/RequestManager.h src/network/client/RequestManager.cpp
-    src/network/client/TedClientInterface.h src/network/client/TedClientInterface.cpp
-    src/network/client/http/Request.h src/network/client/http/Request.cpp
-    src/network/client/http/RequestSendTextToTed.h src/network/client/http/RequestSendTextToTed.cpp
     src/network/connection/ConnectionManager.h src/network/connection/ConnectionManager.cpp
     src/network/connection/ConnectedDeviceModel.h src/network/connection/ConnectedDeviceModel.cpp
     src/utils/Log.h src/utils/Log.cpp

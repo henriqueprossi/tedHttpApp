@@ -21,6 +21,14 @@ public:
     // Commands API.
     Q_INVOKABLE void sendTextToTed(QString ip, quint16 port, QString text);
     Q_INVOKABLE void clearDisplay(QString ip, quint16 port);
+    Q_INVOKABLE void beepInit(QString ip, quint16 port);
+    Q_INVOKABLE void beeps(QString ip, quint16 port, quint8 qtty);
+    Q_INVOKABLE void sendToCOM1(QString ip, quint16 port, QString text);
+    Q_INVOKABLE void sendToCOM2(QString ip, quint16 port, QString text);
+    Q_INVOKABLE void readDigitalInput(QString ip, quint16 port);
+    Q_INVOKABLE void turnOnDigitalInput(QString ip, quint16 port);
+    Q_INVOKABLE void turnOffDigitalInput(QString ip, quint16 port);
+    Q_INVOKABLE void clearShortcutMenu(QString ip, quint16 port);
 
 private:
     explicit TedManager(QObject *parent = nullptr);
@@ -52,6 +60,8 @@ signals:
     void replyReceived(QString ip, QString body);
     void replyTimeout(QString ip);
 
+    void replyReceivedReadDigitalInput(quint8 value);
+
     // Requests relative to Connection API.
     void reqConnectionStart();
     void reqConnectionStop();
@@ -59,6 +69,14 @@ signals:
     // Requests relative to Commands API.
     void reqSendTextToTed(QString ip, quint16 port, QString text);
     void reqClearDisplay(QString ip, quint16 port);
+    void reqBeepInit(QString ip, quint16 port);
+    void reqBeeps(QString ip, quint16 port, quint8 qtty);
+    void reqSendToCOM1(QString ip, quint16 port, QString text);
+    void reqSendToCOM2(QString ip, quint16 port, QString text);
+    void reqReadDigitalInput(QString ip, quint16 port);
+    void reqTurnOnDigitalInput(QString ip, quint16 port);
+    void reqTurnOffDigitalInput(QString ip, quint16 port);
+    void reqClearShortcutMenu(QString ip, quint16 port);
 };
 
 #endif // TEDMANAGER_H

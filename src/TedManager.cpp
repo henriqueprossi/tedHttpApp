@@ -42,6 +42,46 @@ void TedManager::clearDisplay(QString ip, quint16 port) {
     emit reqClearDisplay(ip, port);
 }
 
+void TedManager::beepInit(QString ip, quint16 port) {
+
+    emit reqBeepInit(ip, port);
+}
+
+void TedManager::beeps(QString ip, quint16 port, quint8 qtty) {
+
+    emit reqBeeps(ip, port, qtty);
+}
+
+void TedManager::sendToCOM1(QString ip, quint16 port, QString text) {
+
+    emit reqSendToCOM1(ip, port, text);
+}
+
+void TedManager::sendToCOM2(QString ip, quint16 port, QString text) {
+
+    emit reqSendToCOM2(ip, port, text);
+}
+
+void TedManager::readDigitalInput(QString ip, quint16 port) {
+
+    emit reqReadDigitalInput(ip, port);
+}
+
+void TedManager::turnOnDigitalInput(QString ip, quint16 port) {
+
+    emit reqTurnOnDigitalInput(ip, port);
+}
+
+void TedManager::turnOffDigitalInput(QString ip, quint16 port) {
+
+    emit reqTurnOffDigitalInput(ip, port);
+}
+
+void TedManager::clearShortcutMenu(QString ip, quint16 port) {
+
+    emit reqClearShortcutMenu(ip, port);
+}
+
 TedManager::TedManager(QObject *parent)
     : QObject(parent) {
 
@@ -89,8 +129,17 @@ void TedManager::requestManagerInit() {
     connect(&m_reqManagerThread, &QThread::finished, m_reqManager, &QObject::deleteLater);
     connect(this, &TedManager::reqSendTextToTed, m_reqManager, &RequestManager::sendTextToTed);
     connect(this, &TedManager::reqClearDisplay, m_reqManager, &RequestManager::clearDisplay);
+    connect(this, &TedManager::reqBeepInit, m_reqManager, &RequestManager::beepInit);
+    connect(this, &TedManager::reqBeeps, m_reqManager, &RequestManager::beeps);
+    connect(this, &TedManager::reqSendToCOM1, m_reqManager, &RequestManager::sendToCOM1);
+    connect(this, &TedManager::reqSendToCOM2, m_reqManager, &RequestManager::sendToCOM2);
+    connect(this, &TedManager::reqReadDigitalInput, m_reqManager, &RequestManager::readDigitalInput);
+    connect(this, &TedManager::reqTurnOnDigitalInput, m_reqManager, &RequestManager::turnOnDigitalInput);
+    connect(this, &TedManager::reqTurnOffDigitalInput, m_reqManager, &RequestManager::turnOffDigitalInput);
+    connect(this, &TedManager::reqClearShortcutMenu, m_reqManager, &RequestManager::clearShortcutMenu);
     connect(m_reqManager, &RequestManager::replyReceived, this, &TedManager::processReplyReceived);
     connect(m_reqManager, &RequestManager::replyTimeout, this, &TedManager::replyTimeout);
+    connect(m_reqManager, &RequestManager::replyReceivedReadDigitalInput, this, &TedManager::replyReceivedReadDigitalInput);
     m_reqManagerThread.start();
 }
 
