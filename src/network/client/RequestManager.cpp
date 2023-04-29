@@ -296,3 +296,36 @@ void RequestManager::clearShortcutMenu(QString ip, quint16 port) {
         emit replyTimeout(ip);
     }
 }
+
+void RequestManager::addPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList) {
+
+    if (pagesList.size() != 7) {
+        return;
+    }
+
+    QJsonObject bodyObj;
+    bodyObj.insert("cmd", REQUEST_CMD_ADD_PAGE_TO_SHORTCUT_MENU);
+    QJsonObject argsObj;
+    argsObj.insert("l1", pagesList[0]);
+    argsObj.insert("l2", pagesList[1]);
+    argsObj.insert("l3", pagesList[2]);
+    argsObj.insert("l4", pagesList[3]);
+    argsObj.insert("l5", pagesList[4]);
+    argsObj.insert("l6", pagesList[5]);
+    argsObj.insert("l7", pagesList[6]);
+    bodyObj.insert("args", argsObj);
+
+    QJsonDocument bodyDoc(bodyObj);
+    QString requestBody = bodyDoc.toJson(QJsonDocument::Compact);
+
+    TedInfo tedInfo = { .m_ip = ip, .m_port = port };
+    QString replyBody;
+
+    RequestManager::ResultStatus result = send(tedInfo, requestBody, replyBody);
+
+    if (result == RequestManager::ResultStatus::RES_SUCCESS) {
+        emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
+    }
+}

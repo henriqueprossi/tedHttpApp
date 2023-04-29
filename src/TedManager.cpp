@@ -82,6 +82,11 @@ void TedManager::clearShortcutMenu(QString ip, quint16 port) {
     emit reqClearShortcutMenu(ip, port);
 }
 
+void TedManager::addPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList) {
+
+    emit reqAddPageToShortcutMenu(ip, port, pagesList);
+}
+
 TedManager::TedManager(QObject *parent)
     : QObject(parent) {
 
@@ -137,6 +142,7 @@ void TedManager::requestManagerInit() {
     connect(this, &TedManager::reqTurnOnDigitalInput, m_reqManager, &RequestManager::turnOnDigitalInput);
     connect(this, &TedManager::reqTurnOffDigitalInput, m_reqManager, &RequestManager::turnOffDigitalInput);
     connect(this, &TedManager::reqClearShortcutMenu, m_reqManager, &RequestManager::clearShortcutMenu);
+    connect(this, &TedManager::reqAddPageToShortcutMenu, m_reqManager, &RequestManager::addPageToShortcutMenu);
     connect(m_reqManager, &RequestManager::replyReceived, this, &TedManager::processReplyReceived);
     connect(m_reqManager, &RequestManager::replyTimeout, this, &TedManager::replyTimeout);
     connect(m_reqManager, &RequestManager::replyReceivedReadDigitalInput, this, &TedManager::replyReceivedReadDigitalInput);

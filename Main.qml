@@ -126,9 +126,11 @@ Window {
             width: 200
             height: 50
 
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
-            anchors.verticalCenter: parent.verticalCenter
+            anchors {
+                left: parent.left
+                leftMargin: propBorderMargin
+                verticalCenter: parent.verticalCenter
+            }
 
             onClicked: {
                 if (parent.state === "stateAcceptConnections") {
@@ -146,9 +148,11 @@ Window {
 
             color: "black"
 
-            anchors.top: parent.top
-            anchors.topMargin: propBorderMargin
-            anchors.left: rectConnectedTEDs.left
+            anchors {
+                top: parent.top
+                topMargin: propBorderMargin
+                left: rectConnectedTEDs.left
+            }
         }
 
         Rectangle {
@@ -157,10 +161,12 @@ Window {
             width: 400
             height: 80
 
-            anchors.top: txtConnectedTEDs.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.right: parent.right
-            anchors.rightMargin: propBorderMargin
+            anchors {
+                top: txtConnectedTEDs.bottom
+                topMargin: propBorderMargin
+                right: parent.right
+                rightMargin: propBorderMargin
+            }
 
             border.color: propBorderColor //"black"
             //border.width: 1
@@ -223,9 +229,11 @@ Window {
 
         color: "black"
 
-        anchors.top: rectConnection.bottom
-        anchors.topMargin: propBorderMargin
-        anchors.left: rectLogs.left
+        anchors {
+            top: rectConnection.bottom
+            topMargin: propBorderMargin
+            left: rectLogs.left
+        }
     }
 
     Rectangle {
@@ -234,12 +242,14 @@ Window {
         width: parent.width
         height: 100
 
-        anchors.top: txtLogs.bottom
-        anchors.topMargin: propBorderMargin
-        anchors.left: parent.left
-        anchors.leftMargin: propBorderMargin
-        anchors.right: parent.right
-        anchors.rightMargin: propBorderMargin
+        anchors {
+            top: txtLogs.bottom
+            topMargin: propBorderMargin
+            left: parent.left
+            leftMargin: propBorderMargin
+            right: parent.right
+            rightMargin: propBorderMargin
+        }
 
         border.color: propBorderColor //"black"
         //border.width: 1
@@ -299,10 +309,12 @@ Window {
 
         color: "black"
 
-        anchors.top: rectLogs.bottom
-        anchors.topMargin: propBorderMargin
-        anchors.left: parent.left
-        anchors.leftMargin: propBorderMargin
+        anchors {
+            top: rectLogs.bottom
+            topMargin: propBorderMargin
+            left: parent.left
+            leftMargin: propBorderMargin
+        }
     }
 
     Rectangle {
@@ -311,12 +323,14 @@ Window {
         width: parent.width
         height: 410
 
-        anchors.top: txtCommands.bottom
-        anchors.topMargin: propBorderMargin
-        anchors.left: parent.left
-        anchors.leftMargin: propBorderMargin
-        anchors.right: parent.right
-        anchors.rightMargin: propBorderMargin
+        anchors {
+            top: txtCommands.bottom
+            topMargin: propBorderMargin
+            left: parent.left
+            leftMargin: propBorderMargin
+            right: parent.right
+            rightMargin: propBorderMargin
+        }
 
         border.color: propBorderColor
 
@@ -328,10 +342,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: parent.top
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: parent.top
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Enviar texto"
 
@@ -350,9 +366,11 @@ Window {
             width: 200
             height: btnSendTextToTed.height
 
-            anchors.verticalCenter: btnSendTextToTed.verticalCenter
-            anchors.left: btnSendTextToTed.right
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                verticalCenter: btnSendTextToTed.verticalCenter
+                left: btnSendTextToTed.right
+                leftMargin: propBorderMargin
+            }
 
             verticalAlignment: TextEdit.AlignVCenter
             color: "black"
@@ -371,10 +389,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnSendTextToTed.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnSendTextToTed.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Limpar display"
 
@@ -393,10 +413,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnClearDisplay.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnClearDisplay.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Beep de inicialização"
 
@@ -415,10 +437,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnBeepInit.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnBeepInit.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Emitir beeps"
 
@@ -437,9 +461,11 @@ Window {
             width: 100
             height: btnBeeps.height
 
-            anchors.verticalCenter: btnBeeps.verticalCenter
-            anchors.left: btnBeeps.right
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                verticalCenter: btnBeeps.verticalCenter
+                left: btnBeeps.right
+                leftMargin: propBorderMargin
+            }
 
             from: 1
             to: 255
@@ -453,10 +479,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnBeeps.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnBeeps.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Enviar para COM1"
 
@@ -475,9 +503,11 @@ Window {
             width: 200
             height: btnSendToCOM1.height
 
-            anchors.verticalCenter: btnSendToCOM1.verticalCenter
-            anchors.left: btnSendToCOM1.right
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                verticalCenter: btnSendToCOM1.verticalCenter
+                left: btnSendToCOM1.right
+                leftMargin: propBorderMargin
+            }
 
             verticalAlignment: TextEdit.AlignVCenter
             color: "black"
@@ -496,10 +526,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnSendToCOM1.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnSendToCOM1.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Enviar para COM2"
 
@@ -518,9 +550,11 @@ Window {
             width: 200
             height: btnSendToCOM2.height
 
-            anchors.verticalCenter: btnSendToCOM2.verticalCenter
-            anchors.left: btnSendToCOM2.right
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                verticalCenter: btnSendToCOM2.verticalCenter
+                left: btnSendToCOM2.right
+                leftMargin: propBorderMargin
+            }
 
             verticalAlignment: TextEdit.AlignVCenter
             color: "black"
@@ -539,10 +573,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnSendToCOM2.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnSendToCOM2.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Ler entrada digital"
 
@@ -561,9 +597,11 @@ Window {
             width: 50
             height: btnReadDigitalInput.height
 
-            anchors.verticalCenter: btnReadDigitalInput.verticalCenter
-            anchors.left: btnReadDigitalInput.right
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                verticalCenter: btnReadDigitalInput.verticalCenter
+                left: btnReadDigitalInput.right
+                leftMargin: propBorderMargin
+            }
 
             verticalAlignment: TextEdit.AlignVCenter
             horizontalAlignment: TextEdit.AlignHCenter
@@ -577,10 +615,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnReadDigitalInput.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnReadDigitalInput.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Ligar saída digital"
 
@@ -599,10 +639,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnDigitalInputOn.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: parent.left
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnDigitalInputOn.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
 
             text: "Desligar saída digital"
 
@@ -623,10 +665,12 @@ Window {
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: parent.top
-            anchors.topMargin: propBorderMargin
-            anchors.left: txtAreaSendTextToTed.right
-            anchors.leftMargin: propBorderMargin * 2
+            anchors {
+                top: parent.top
+                topMargin: propBorderMargin
+                left: txtAreaSendTextToTed.right
+                leftMargin: propBorderMargin * 2
+            }
 
             text: "Limpar menu de atalhos"
 
@@ -642,19 +686,32 @@ Window {
         Button {
             id: btnAddShortcutPage
 
+            property list<string> pagesList: ["", "", "", "", "", "", ""]
+
             width: propButtonWidth
             height: propButtonHeight
 
-            anchors.top: btnClearShortcutMenu.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: btnClearShortcutMenu.left
+            anchors {
+                top: btnClearShortcutMenu.bottom
+                topMargin: propBorderMargin
+                left: btnClearShortcutMenu.left
+            }
 
             text: "Adicionar página..."
 
             onClicked: {
                 let activeConnectedTed = listViewConnectedTEDs.currentItem;
                 let ip = activeConnectedTed.ip;
-                TedManager.addPageToShortcutMenu(ip, 8090);
+
+                pagesList[0] = txtAddShortcutPageLine1.text;
+                pagesList[1] = txtAddShortcutPageLine2.text;
+                pagesList[2] = txtAddShortcutPageLine3.text;
+                pagesList[3] = txtAddShortcutPageLine4.text;
+                pagesList[4] = txtAddShortcutPageLine5.text;
+                pagesList[5] = txtAddShortcutPageLine6.text;
+                pagesList[6] = txtAddShortcutPageLine7.text;
+
+                TedManager.addPageToShortcutMenu(ip, 8090, pagesList);
 
                 onCommandSent(ip);
             }
@@ -667,9 +724,11 @@ Window {
 
             color: "black"
 
-            anchors.top: btnAddShortcutPage.top
-            anchors.left: btnAddShortcutPage.right
-            anchors.leftMargin: propBorderMargin
+            anchors {
+                top: btnAddShortcutPage.top
+                left: btnAddShortcutPage.right
+                leftMargin: propBorderMargin
+            }
         }
 
         Rectangle {
@@ -679,9 +738,11 @@ Window {
             width: 250
             height: 330
 
-            anchors.top: txtPageContents.bottom
-            anchors.topMargin: propBorderMargin
-            anchors.left: txtPageContents.left
+            anchors {
+                top: txtPageContents.bottom
+                topMargin: propBorderMargin
+                left: txtPageContents.left
+            }
 
             border.color: propBorderColor
 
@@ -693,10 +754,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: parent.top
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: parent.top
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 
@@ -709,10 +772,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: txtAddShortcutPageLine1.bottom
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: txtAddShortcutPageLine1.bottom
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 
@@ -725,10 +790,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: txtAddShortcutPageLine2.bottom
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: txtAddShortcutPageLine2.bottom
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 
@@ -741,10 +808,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: txtAddShortcutPageLine3.bottom
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: txtAddShortcutPageLine3.bottom
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 
@@ -757,10 +826,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: txtAddShortcutPageLine4.bottom
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: txtAddShortcutPageLine4.bottom
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 
@@ -773,10 +844,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: txtAddShortcutPageLine5.bottom
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: txtAddShortcutPageLine5.bottom
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 
@@ -789,10 +862,12 @@ Window {
                 width: 50
                 height: btnAddShortcutPage.height
 
-                anchors.top: txtAddShortcutPageLine6.bottom
-                anchors.topMargin: propBorderMargin
-                anchors.left: parent.left
-                anchors.leftMargin: propBorderMargin
+                anchors {
+                    top: txtAddShortcutPageLine6.bottom
+                    topMargin: propBorderMargin
+                    left: parent.left
+                    leftMargin: propBorderMargin
+                }
 
                 verticalAlignment: TextEdit.AlignVCenter
 

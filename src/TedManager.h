@@ -29,6 +29,7 @@ public:
     Q_INVOKABLE void turnOnDigitalInput(QString ip, quint16 port);
     Q_INVOKABLE void turnOffDigitalInput(QString ip, quint16 port);
     Q_INVOKABLE void clearShortcutMenu(QString ip, quint16 port);
+    Q_INVOKABLE void addPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList);
 
 private:
     explicit TedManager(QObject *parent = nullptr);
@@ -77,6 +78,7 @@ signals:
     void reqTurnOnDigitalInput(QString ip, quint16 port);
     void reqTurnOffDigitalInput(QString ip, quint16 port);
     void reqClearShortcutMenu(QString ip, quint16 port);
+    void reqAddPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList);
 };
 
 #endif // TEDMANAGER_H

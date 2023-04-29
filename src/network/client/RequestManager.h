@@ -32,7 +32,8 @@ private:
         REQUEST_CMD_READ_DIGITAL_INPUT = 13,
         REQUEST_CMD_TURN_ON_DIGITAL_INPUT = 14,
         REQUEST_CMD_TURN_OFF_DIGITAL_INPUT = 15,
-        REQUEST_CMD_CLEAR_SHORTCUT_MENU = 17
+        REQUEST_CMD_CLEAR_SHORTCUT_MENU = 17,
+        REQUEST_CMD_ADD_PAGE_TO_SHORTCUT_MENU = 18
     };
 
     enum class ResultStatus {
@@ -59,6 +60,7 @@ public slots:
     void turnOnDigitalInput(QString ip, quint16 port);
     void turnOffDigitalInput(QString ip, quint16 port);
     void clearShortcutMenu(QString ip, quint16 port);
+    void addPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList);
 };
 
 #endif // REQUEST_MANAGER_H
