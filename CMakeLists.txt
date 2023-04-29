@@ -4,7 +4,12 @@ project(tedHttpApp VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Core Quick Network)
+find_package(Qt6 6.4 REQUIRED COMPONENTS
+    Core
+    Quick
+    Network
+    HttpServer
+)
 
 qt_standard_project_setup()
 
@@ -14,6 +19,7 @@ qt_add_executable(apptedHttpApp
     src/network/client/RequestManager.h src/network/client/RequestManager.cpp
     src/network/connection/ConnectionManager.h src/network/connection/ConnectionManager.cpp
     src/network/connection/ConnectedDeviceModel.h src/network/connection/ConnectedDeviceModel.cpp
+    src/network/server/CommandServer.h src/network/server/CommandServer.cpp
     src/utils/Log.h src/utils/Log.cpp
 )
 
@@ -28,6 +34,7 @@ include_directories(
     src/network/connection
     src/network/client
     src/network/client/http
+    src/network/server
     src/utils
 )
 
@@ -42,6 +49,7 @@ set_target_properties(apptedHttpApp PROPERTIES
 target_link_libraries(apptedHttpApp PRIVATE
     Qt6::Quick
     Qt6::Network
+    Qt6::HttpServer
 )
 
 install(TARGETS apptedHttpApp

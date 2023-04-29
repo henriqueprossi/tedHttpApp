@@ -12,7 +12,7 @@ Window {
     property color propBorderColor: "#21be2b"
 
     width: 900
-    height: 720
+    height: 680
     visible: true
     title: qsTr("Aplicação de testes do TED HTTP")
 
@@ -25,17 +25,17 @@ Window {
     }
 
     function onCommandSent(ip: string) {
-        addLog("command sent to " + ip);
+        addLog("Comando enviado para " + ip);
         popupWaitReply.open();
     }
 
     function onCommandReply(ip: string, body: string) {
-        addLog("reply received from " + ip + ", body: " + body);
+        addLog("Resposta recebida de " + ip + ", body: " + body);
         popupWaitReply.close();
     }
 
     function onCommandTimeout(ip: string) {
-        addLog("reply timeout from " + ip);
+        addLog("Timeout de resposta de " + ip);
         popupWaitReply.close();
     }
 
@@ -61,12 +61,12 @@ Window {
         target: TedManager
 
         function onConnected(ip: string) {
-            addLog("connected: " + ip);
+            addLog("TED conectado: " + ip);
             listConnectedDevicesModel.append(ip);
         }
 
         function onDisconnected(ip: string) {
-            addLog("disconnected: " + ip);
+            addLog("TED desconectado: " + ip);
             listConnectedDevicesModel.remove(ip);
         }
 
@@ -80,6 +80,10 @@ Window {
 
         function onReplyReceivedReadDigitalInput(value: int) {
             txtDigitalInputValue.text = value;
+        }
+
+        function onTextFromTed(source: int, text: string) {
+            addLog("Dado recebido do TED: origem: " + source + ", texto: " + text);
         }
     }
 
@@ -111,7 +115,7 @@ Window {
         ]
 
         onStateChanged: {
-            addLog("state changed to: " + state);
+            addLog("Estado atual: " + state);
 
             if (state === "stateAcceptConnections") {
                 TedManager.startMonitoringConnection();

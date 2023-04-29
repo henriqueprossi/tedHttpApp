@@ -6,6 +6,7 @@
 
 class ConnectionManager;
 class RequestManager;
+class CommandServer;
 
 class TedManager : public QObject {
 
@@ -37,6 +38,7 @@ private:
 
     void connectionManagerInit();
     void requestManagerInit();
+    void commandSeverInit();
 
     void connectionManagerDeInit();
     void requestManagerDeInit();
@@ -50,6 +52,9 @@ private:
     RequestManager *m_reqManager;
     QThread m_reqManagerThread;
 
+    CommandServer *m_commandServer;
+    QThread m_commandServerThread;
+
 public slots:
     void processReplyReceived(QString ip, QString body);
 
@@ -62,6 +67,8 @@ signals:
     void replyTimeout(QString ip);
 
     void replyReceivedReadDigitalInput(quint8 value);
+
+    void textFromTed(qint8 source, QString text);
 
     // Requests relative to Connection API.
     void reqConnectionStart();

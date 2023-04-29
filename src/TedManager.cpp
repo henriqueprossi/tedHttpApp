@@ -1,8 +1,8 @@
 #include "TedManager.h"
 #include "ConnectionManager.h"
 #include "RequestManager.h"
+#include "CommandServer.h"
 #include "Log.h"
-//#include <QtConcurrent/QtConcurrentRun>
 
 TedManager &TedManager::instance() {
 
@@ -15,10 +15,6 @@ void TedManager::startMonitoringConnection() {
     Log::instance().log("TedManager", "starting monitoring connection...");
 
     emit reqConnectionStart();
-
-//    QFuture<void> future = QtConcurrent::run([this] {
-//        m_connectionManager->start();
-//    });
 }
 
 void TedManager::stopMonitoringConnection() {
@@ -26,10 +22,6 @@ void TedManager::stopMonitoringConnection() {
     Log::instance().log("TedManager", "stoping monitoring connection...");
 
     emit reqConnectionStop();
-
-//    QFuture<void> future = QtConcurrent::run([this] {
-//        m_connectionManager->stop();
-    //    });
 }
 
 void TedManager::sendTextToTed(QString ip, quint16 port, QString text) {
@@ -94,6 +86,7 @@ TedManager::TedManager(QObject *parent)
 
     connectionManagerInit();
     requestManagerInit();
+    commandSeverInit();
 }
 
 void TedManager::processReplyReceived(QString ip, QString body) {
@@ -147,6 +140,17 @@ void TedManager::requestManagerInit() {
     connect(m_reqManager, &RequestManager::replyTimeout, this, &TedManager::replyTimeout);
     connect(m_reqManager, &RequestManager::replyReceivedReadDigitalInput, this, &TedManager::replyReceivedReadDigitalInput);
     m_reqManagerThread.start();
+}
+
+void TedManager::commandSeverInit() {
+
+    m_commandServer = new CommandServer();
+    m_commandServer->moveToThread(&m_commandServerThread);
+
+    connect(&m_commandServerThread, &QThread::finished, m_commandServer, &QObject::deleteLater);
+    connect(m_commandServer, &CommandServer::textFromTed, this, &TedManager::textFromTed);
+
+    m_connManagerThread.start();
 }
 
 void TedManager::connectionManagerDeInit() {
