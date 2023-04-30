@@ -57,6 +57,7 @@ private:
 
 public slots:
     void processReplyReceived(QString ip, QString body);
+    void processTextFromTed(QString tedIp, qint8 source, QString text);
 
 signals:
     void connected(QString ip);
@@ -68,7 +69,7 @@ signals:
 
     void replyReceivedReadDigitalInput(quint8 value);
 
-    void textFromTed(qint8 source, QString text);
+    void textFromTed(QString tedIp, qint8 source, QString text);
 
     // Requests relative to Connection API.
     void reqConnectionStart();

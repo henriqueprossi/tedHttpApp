@@ -19,15 +19,18 @@ CommandServer::~CommandServer() {
 void CommandServer::httpServerInit() {
 
     m_httpServer.route("/", QHttpServerRequest::Method::Post, [&](const QHttpServerRequest &request) {
-
         const QJsonObject commandJson = QJsonDocument::fromJson(request.body()).object();
-
-        QJsonObject replyBody = processCommand(commandJson);
-
+        bool ipOk = false;
+        QHostAddress tedIpV4(request.remoteAddress().toIPv4Address(&ipOk));
+        QString tedIpStr;
+        if (ipOk) {
+            tedIpStr = tedIpV4.toString();
+        }
+        QJsonObject replyBody = processCommand(tedIpStr, commandJson);
         return QHttpServerResponse(replyBody, QHttpServerResponder::StatusCode::Created);
     });
 
-    m_httpServer.afterRequest([](QHttpServerResponse &&resp) {
+    m_httpServer.afterRequest([](QHttpServerResponse &&resp) {        
         resp.setHeader("Server", "TED http server");
         return std::move(resp);
     });
@@ -42,7 +45,7 @@ void CommandServer::httpServerInit() {
     }
 }
 
-QJsonObject CommandServer::processCommand(const QJsonObject &commandJson) {
+QJsonObject CommandServer::processCommand(const QString tedIp, const QJsonObject &commandJson) {
 
     qint8 source = commandJson.value("source").toInt();
     QString text = commandJson.value("text").toString();
@@ -51,7 +54,7 @@ QJsonObject CommandServer::processCommand(const QJsonObject &commandJson) {
         "CommandServer",
         "Received from TED - source: " + QString::number(source) + ", text: " + text);
 
-    emit textFromTed(source, text);
+    emit textFromTed(tedIp, source, text);
 
     // Empty reply.
     QJsonObject replyBody;

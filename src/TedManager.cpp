@@ -95,6 +95,12 @@ void TedManager::processReplyReceived(QString ip, QString body) {
     emit dataReceivedFrom(ip);
 }
 
+void TedManager::processTextFromTed(QString tedIp, qint8 source, QString text) {
+
+    emit textFromTed(tedIp, source, text);
+    emit dataReceivedFrom(tedIp);
+}
+
 TedManager::~TedManager() {
 
     Log::instance().log("TedManager", "destructor");
@@ -148,7 +154,7 @@ void TedManager::commandSeverInit() {
     m_commandServer->moveToThread(&m_commandServerThread);
 
     connect(&m_commandServerThread, &QThread::finished, m_commandServer, &QObject::deleteLater);
-    connect(m_commandServer, &CommandServer::textFromTed, this, &TedManager::textFromTed);
+    connect(m_commandServer, &CommandServer::textFromTed, this, &TedManager::processTextFromTed);
 
     m_connManagerThread.start();
 }

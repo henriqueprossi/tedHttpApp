@@ -21,10 +21,10 @@ private:
     QHttpServer m_httpServer;
 
     void httpServerInit();
-    QJsonObject processCommand(const QJsonObject &commandJson);
+    QJsonObject processCommand(const QString tedIp, const QJsonObject &commandJson);
 
 signals:
-    void textFromTed(qint8 source, QString text);
+    void textFromTed(QString tedIp, qint8 source, QString text);
 
 public slots:
 
