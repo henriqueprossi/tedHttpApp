@@ -25,17 +25,17 @@ Window {
     }
 
     function onCommandSent(ip: string) {
-        addLog("Comando enviado para " + ip);
+        addLog("[Comando enviado] " + ip);
         popupWaitReply.open();
     }
 
     function onCommandReply(ip: string, body: string) {
-        addLog("Resposta recebida de " + ip + ", body: " + body);
+        addLog("[Resposta recebida] " + ip + ", body: " + body);
         popupWaitReply.close();
     }
 
     function onCommandTimeout(ip: string) {
-        addLog("Timeout de resposta de " + ip);
+        addLog("[Timeout de resposta] " + ip);
         popupWaitReply.close();
     }
 
@@ -61,12 +61,12 @@ Window {
         target: TedManager
 
         function onConnected(ip: string) {
-            addLog("TED conectado: " + ip);
+            addLog("[TED conectado] " + ip);
             listConnectedDevicesModel.append(ip);
         }
 
         function onDisconnected(ip: string) {
-            addLog("TED desconectado: " + ip);
+            addLog("[TED desconectado] " + ip);
             listConnectedDevicesModel.remove(ip);
         }
 
@@ -82,8 +82,8 @@ Window {
             txtDigitalInputValue.text = value;
         }
 
-        function onTextFromTed(source: int, text: string) {
-            addLog("Dado recebido do TED: origem: " + source + ", texto: " + text);
+        function onTextFromTed(tedIp: string, source: int, text: string) {
+            addLog("[Dado recebido do TED] ip: " + tedIp + ", origem: " + source + ", texto: " + text);
         }
     }
 
@@ -115,7 +115,7 @@ Window {
         ]
 
         onStateChanged: {
-            addLog("Estado atual: " + state);
+            addLog("[Estado atual] " + state);
 
             if (state === "stateAcceptConnections") {
                 TedManager.startMonitoringConnection();
