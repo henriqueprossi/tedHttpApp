@@ -156,7 +156,7 @@ void TedManager::commandSeverInit() {
     connect(&m_commandServerThread, &QThread::finished, m_commandServer, &QObject::deleteLater);
     connect(m_commandServer, &CommandServer::textFromTed, this, &TedManager::processTextFromTed);
 
-    m_connManagerThread.start();
+    m_commandServerThread.start();
 }
 
 void TedManager::connectionManagerDeInit() {
