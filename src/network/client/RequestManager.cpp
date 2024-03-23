@@ -1,8 +1,6 @@
-#include <QEventLoop>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
+#include <QTcpSocket>
 #include "RequestManager.h"
 #include "Log.h"
 
@@ -19,61 +17,54 @@ RequestManager::~RequestManager() {
 
 RequestManager::ResultStatus RequestManager::send(TedInfo &tedInfo, QString &requestBody, QString &replyBody) {
 
-    QNetworkAccessManager nam;
-    QEventLoop eventLoop;
-    QTimer timeoutTimer;
-    bool timeout = false;
-    RequestManager::ResultStatus sendResult = RequestManager::ResultStatus::RES_FAIL;
+    Log::instance().log("RequestManager", "sending to " + tedInfo.m_ip + ":" + QString::number(tedInfo.m_port) +
+                                              " -> " + requestBody);
 
-    QNetworkRequest request;
-    QString url = "http://" + tedInfo.m_ip + ":" + QString::number(tedInfo.m_port);
-    request.setUrl(QUrl(url));
-    request.setRawHeader("User-Agent", "tedHttpApp");
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QTcpSocket socket;
+    socket.connectToHost(tedInfo.m_ip, tedInfo.m_port);
 
-    connect(&nam, &QNetworkAccessManager::finished,
-            &eventLoop, &QEventLoop::quit);
+    Log::instance().log("RequestManager", "waiting connection...");
 
-    connect(&timeoutTimer, &QTimer::timeout, this, [&]() {
-        timeout = true;
-        eventLoop.quit();
-    });
+    if (!socket.waitForConnected(REQUEST_TIMEOUT_MS)) {
+        Log::instance().log("RequestManager", "not connected!");
+        return RequestManager::ResultStatus::RES_FAIL;
+    }
 
-    timeoutTimer.setInterval(REQUEST_TIMEOUT_MS);
-    timeoutTimer.setSingleShot(true);
-    timeoutTimer.start();
+    Log::instance().log("RequestManager", "connected!");
 
     QByteArray bodyArray = requestBody.toUtf8();
 
-    QNetworkReply *reply = nam.post(request, bodyArray);
+    Log::instance().log("RequestManager", "writting...");
 
-    eventLoop.exec();
-
-    //connect(reply, &QIODevice::readyRead, this, &Request::replyFinished);
-    //connect(reply, &QNetworkReply::errorOccurred, this, &Request::replyError);
-
-    QNetworkReply::NetworkError requestResult = reply->error() ;
-
-    if (timeout || (requestResult != QNetworkReply::NoError)) {
-
-        Log::instance().log("Request", "Reply error! error: " + QString::number(requestResult) + ", timeout: " + QString::number(timeout));
-
-    } else {
-
-        int code = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-
-        replyBody = QString(reply->readAll());
-
-        Log::instance().log("Request", "Reply success! status code: " + QString::number(code) + ", body: " + replyBody);
-
-        //emit replyReceived(replyBody);
-
-        sendResult = RequestManager::ResultStatus::RES_SUCCESS;
+    qint64 writtenBytes = socket.write(bodyArray);
+    if (writtenBytes != bodyArray.size()) {
+        Log::instance().log("RequestManager", "write call error!");
+        return RequestManager::ResultStatus::RES_FAIL;
     }
 
-    delete reply;
+    if (!socket.waitForBytesWritten(REQUEST_TIMEOUT_MS)) {
+        Log::instance().log("RequestManager", "wait write call error!");
+        return RequestManager::ResultStatus::RES_FAIL;
+    }
 
-    return sendResult;
+    Log::instance().log("RequestManager", "reading reply...");
+
+    if (!socket.waitForReadyRead(REQUEST_TIMEOUT_MS)) {
+        Log::instance().log("RequestManager", "no reply from TED!");
+        return RequestManager::ResultStatus::RES_FAIL;
+    }
+
+    qint64 availableBytes = socket.bytesAvailable();
+
+    Log::instance().log("RequestManager", "got " + QString::number(availableBytes) + " bytes!");
+
+    QByteArray replyArray = socket.readAll();
+
+    replyBody = QString::fromUtf8(replyArray);
+
+    Log::instance().log("RequestManager", "replyBody: " + replyBody);
+
+    return RequestManager::ResultStatus::RES_SUCCESS;
 }
 
 void RequestManager::sendTextToTed(QString ip, quint16 port, QString text) {

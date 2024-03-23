@@ -2,8 +2,9 @@
 #define COMMAND_SERVER_H
 
 #include <QObject>
-#include <QHttpServer>
 #include <QJsonObject>
+
+class QTcpServer;
 
 class CommandServer : public QObject {
 
@@ -15,19 +16,20 @@ public:
 
 private:
     enum privateConstants {
-        HTTP_SERVER_PORT = 8090
+        TCP_SERVER_PORT = 8090,
+        TCP_SEND_TIMEOUT_MS = 5000
     };
 
-    QHttpServer m_httpServer;
+    QTcpServer *m_tcpServer;
 
-    void httpServerInit();
+    void serverInit();
     QJsonObject processCommand(const QString tedIp, const QJsonObject &commandJson);
 
 signals:
     void textFromTed(QString tedIp, qint8 source, QString text);
 
-public slots:
-
+private slots:
+    void handleNewConnection();
 };
 
 #endif // COMMAND_SERVER_H
