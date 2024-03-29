@@ -79,6 +79,26 @@ void TedManager::addPageToShortcutMenu(QString ip, quint16 port, QStringList pag
     emit reqAddPageToShortcutMenu(ip, port, pagesList);
 }
 
+void TedManager::setReadEnabledCOM1(QString ip, quint16 port) {
+
+    emit reqSetReadEnabledCOM1(ip, port);
+}
+
+void TedManager::setReadDisabledCOM1(QString ip, quint16 port) {
+
+    emit reqSetReadDisabledCOM1(ip, port);
+}
+
+void TedManager::setReadEnabledCOM2(QString ip, quint16 port) {
+
+    emit reqSetReadEnabledCOM2(ip, port);
+}
+
+void TedManager::setReadDisabledCOM2(QString ip, quint16 port) {
+
+    emit reqSetReadDisabledCOM2(ip, port);
+}
+
 TedManager::TedManager(QObject *parent)
     : QObject(parent) {
 
@@ -142,6 +162,10 @@ void TedManager::requestManagerInit() {
     connect(this, &TedManager::reqTurnOffDigitalInput, m_reqManager, &RequestManager::turnOffDigitalInput);
     connect(this, &TedManager::reqClearShortcutMenu, m_reqManager, &RequestManager::clearShortcutMenu);
     connect(this, &TedManager::reqAddPageToShortcutMenu, m_reqManager, &RequestManager::addPageToShortcutMenu);
+    connect(this, &TedManager::reqSetReadEnabledCOM1, m_reqManager, &RequestManager::setReadEnabledCOM1);
+    connect(this, &TedManager::reqSetReadDisabledCOM1, m_reqManager, &RequestManager::setReadDisabledCOM1);
+    connect(this, &TedManager::reqSetReadEnabledCOM2, m_reqManager, &RequestManager::setReadEnabledCOM2);
+    connect(this, &TedManager::reqSetReadDisabledCOM2, m_reqManager, &RequestManager::setReadDisabledCOM2);
     connect(m_reqManager, &RequestManager::replyReceived, this, &TedManager::processReplyReceived);
     connect(m_reqManager, &RequestManager::replyTimeout, this, &TedManager::replyTimeout);
     connect(m_reqManager, &RequestManager::replyReceivedReadDigitalInput, this, &TedManager::replyReceivedReadDigitalInput);

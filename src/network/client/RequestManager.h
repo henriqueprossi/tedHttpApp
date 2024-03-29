@@ -29,6 +29,8 @@ private:
         REQUEST_CMD_BEEPS = 5,
         REQUEST_CMD_SEND_TO_COM1 = 6,
         REQUEST_CMD_SEND_TO_COM2 = 7,
+        REQUEST_CMD_ID_SET_READ_ENABLED_SERIAL_1 = 8,
+        REQUEST_CMD_ID_SET_READ_ENABLED_SERIAL_2 = 9,
         REQUEST_CMD_READ_DIGITAL_INPUT = 13,
         REQUEST_CMD_TURN_ON_DIGITAL_INPUT = 14,
         REQUEST_CMD_TURN_OFF_DIGITAL_INPUT = 15,
@@ -61,6 +63,10 @@ public slots:
     void turnOffDigitalInput(QString ip, quint16 port);
     void clearShortcutMenu(QString ip, quint16 port);
     void addPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList);
+    void setReadEnabledCOM1(QString ip, quint16 port);
+    void setReadDisabledCOM1(QString ip, quint16 port);
+    void setReadEnabledCOM2(QString ip, quint16 port);
+    void setReadDisabledCOM2(QString ip, quint16 port);
 };
 
 #endif // REQUEST_MANAGER_H

@@ -31,6 +31,10 @@ public:
     Q_INVOKABLE void turnOffDigitalInput(QString ip, quint16 port);
     Q_INVOKABLE void clearShortcutMenu(QString ip, quint16 port);
     Q_INVOKABLE void addPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList);
+    Q_INVOKABLE void setReadEnabledCOM1(QString ip, quint16 port);
+    Q_INVOKABLE void setReadDisabledCOM1(QString ip, quint16 port);
+    Q_INVOKABLE void setReadEnabledCOM2(QString ip, quint16 port);
+    Q_INVOKABLE void setReadDisabledCOM2(QString ip, quint16 port);
 
 private:
     explicit TedManager(QObject *parent = nullptr);
@@ -87,6 +91,10 @@ signals:
     void reqTurnOffDigitalInput(QString ip, quint16 port);
     void reqClearShortcutMenu(QString ip, quint16 port);
     void reqAddPageToShortcutMenu(QString ip, quint16 port, QStringList pagesList);
+    void reqSetReadEnabledCOM1(QString ip, quint16 port);
+    void reqSetReadDisabledCOM1(QString ip, quint16 port);
+    void reqSetReadEnabledCOM2(QString ip, quint16 port);
+    void reqSetReadDisabledCOM2(QString ip, quint16 port);
 };
 
 #endif // TEDMANAGER_H

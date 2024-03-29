@@ -478,13 +478,103 @@ Window {
         }
 
         Button {
-            id: btnSendToCOM1
+            id: btnReadDigitalInput
 
             width: propButtonWidth
             height: propButtonHeight
 
             anchors {
                 top: btnBeeps.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
+
+            text: "Ler entrada digital"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.readDigitalInput(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Text {
+            id: txtDigitalInputValue
+
+            width: 50
+            height: btnReadDigitalInput.height
+
+            anchors {
+                verticalCenter: btnReadDigitalInput.verticalCenter
+                left: btnReadDigitalInput.right
+                leftMargin: propBorderMargin
+            }
+
+            verticalAlignment: TextEdit.AlignVCenter
+            horizontalAlignment: TextEdit.AlignHCenter
+            color: "black"
+            text: "-"
+        }
+
+        Button {
+            id: btnDigitalInputOn
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                top: btnReadDigitalInput.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
+
+            text: "Ligar saída digital"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.turnOnDigitalInput(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnDigitalInputOff
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                top: btnDigitalInputOn.bottom
+                topMargin: propBorderMargin
+                left: parent.left
+                leftMargin: propBorderMargin
+            }
+
+            text: "Desligar saída digital"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.turnOffDigitalInput(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnSendToCOM1
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                top: btnDigitalInputOff.bottom
                 topMargin: propBorderMargin
                 left: parent.left
                 leftMargin: propBorderMargin
@@ -568,96 +658,6 @@ Window {
 
             background: Rectangle {
                 border.color: txtAreaSendToCOM2.enabled ? propBorderColor : "transparent"
-            }
-        }
-
-        Button {
-            id: btnReadDigitalInput
-
-            width: propButtonWidth
-            height: propButtonHeight
-
-            anchors {
-                top: btnSendToCOM2.bottom
-                topMargin: propBorderMargin
-                left: parent.left
-                leftMargin: propBorderMargin
-            }
-
-            text: "Ler entrada digital"
-
-            onClicked: {
-                let activeConnectedTed = listViewConnectedTEDs.currentItem;
-                let ip = activeConnectedTed.ip;
-                TedManager.readDigitalInput(ip, 8090);
-
-                onCommandSent(ip);
-            }
-        }
-
-        Text {
-            id: txtDigitalInputValue
-
-            width: 50
-            height: btnReadDigitalInput.height
-
-            anchors {
-                verticalCenter: btnReadDigitalInput.verticalCenter
-                left: btnReadDigitalInput.right
-                leftMargin: propBorderMargin
-            }
-
-            verticalAlignment: TextEdit.AlignVCenter
-            horizontalAlignment: TextEdit.AlignHCenter
-            color: "black"
-            text: "-"
-        }
-
-        Button {
-            id: btnDigitalInputOn
-
-            width: propButtonWidth
-            height: propButtonHeight
-
-            anchors {
-                top: btnReadDigitalInput.bottom
-                topMargin: propBorderMargin
-                left: parent.left
-                leftMargin: propBorderMargin
-            }
-
-            text: "Ligar saída digital"
-
-            onClicked: {
-                let activeConnectedTed = listViewConnectedTEDs.currentItem;
-                let ip = activeConnectedTed.ip;
-                TedManager.turnOnDigitalInput(ip, 8090);
-
-                onCommandSent(ip);
-            }
-        }
-
-        Button {
-            id: btnDigitalInputOff
-
-            width: propButtonWidth
-            height: propButtonHeight
-
-            anchors {
-                top: btnDigitalInputOn.bottom
-                topMargin: propBorderMargin
-                left: parent.left
-                leftMargin: propBorderMargin
-            }
-
-            text: "Desligar saída digital"
-
-            onClicked: {
-                let activeConnectedTed = listViewConnectedTEDs.currentItem;
-                let ip = activeConnectedTed.ip;
-                TedManager.turnOffDigitalInput(ip, 8090);
-
-                onCommandSent(ip);
             }
         }
 
@@ -876,6 +876,97 @@ Window {
                 verticalAlignment: TextEdit.AlignVCenter
 
                 text: "7 15 caracteres"
+            }
+        }
+
+        Button {
+            id: btnSetReadEnabledCOM1
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                verticalCenter: btnDigitalInputOn.verticalCenter
+                left: btnClearShortcutMenu.left
+            }
+
+            text: "Habilitar leitura COM1"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.setReadEnabledCOM1(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnSetReadDisabledCOM1
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                top: btnSetReadEnabledCOM1.bottom
+                topMargin: propBorderMargin
+                left: btnSetReadEnabledCOM1.left
+            }
+
+            text: "Desabilitar leitura COM1"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.setReadDisabledCOM1(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnSetReadEnabledCOM2
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                top: btnSetReadDisabledCOM1.bottom
+                topMargin: propBorderMargin
+                left: btnSetReadDisabledCOM1.left
+            }
+
+            text: "Habilitar leitura COM2"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.setReadEnabledCOM2(ip, 8090);
+
+                onCommandSent(ip);
+            }
+        }
+
+        Button {
+            id: btnSetReadDisabledCOM2
+
+            width: propButtonWidth
+            height: propButtonHeight
+
+            anchors {
+                top: btnSetReadEnabledCOM2.bottom
+                topMargin: propBorderMargin
+                left: btnSetReadEnabledCOM2.left
+            }
+
+            text: "Desabilitar leitura COM2"
+
+            onClicked: {
+                let activeConnectedTed = listViewConnectedTEDs.currentItem;
+                let ip = activeConnectedTed.ip;
+                TedManager.setReadDisabledCOM2(ip, 8090);
+
+                onCommandSent(ip);
             }
         }
     }

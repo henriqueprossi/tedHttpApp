@@ -320,3 +320,95 @@ void RequestManager::addPageToShortcutMenu(QString ip, quint16 port, QStringList
         emit replyTimeout(ip);
     }
 }
+
+void RequestManager::setReadEnabledCOM1(QString ip, quint16 port)
+{
+    QJsonObject bodyObj;
+    bodyObj.insert("cmd", REQUEST_CMD_ID_SET_READ_ENABLED_SERIAL_1);
+    QJsonObject argsObj;
+    argsObj.insert("enabled", true);
+    bodyObj.insert("args", argsObj);
+
+    QJsonDocument bodyDoc(bodyObj);
+    QString requestBody = bodyDoc.toJson(QJsonDocument::Compact);
+
+    TedInfo tedInfo = { .m_ip = ip, .m_port = port };
+    QString replyBody;
+
+    RequestManager::ResultStatus result = send(tedInfo, requestBody, replyBody);
+
+    if (result == RequestManager::ResultStatus::RES_SUCCESS) {
+        emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
+    }
+}
+
+void RequestManager::setReadDisabledCOM1(QString ip, quint16 port)
+{
+    QJsonObject bodyObj;
+    bodyObj.insert("cmd", REQUEST_CMD_ID_SET_READ_ENABLED_SERIAL_1);
+    QJsonObject argsObj;
+    argsObj.insert("enabled", false);
+    bodyObj.insert("args", argsObj);
+
+    QJsonDocument bodyDoc(bodyObj);
+    QString requestBody = bodyDoc.toJson(QJsonDocument::Compact);
+
+    TedInfo tedInfo = { .m_ip = ip, .m_port = port };
+    QString replyBody;
+
+    RequestManager::ResultStatus result = send(tedInfo, requestBody, replyBody);
+
+    if (result == RequestManager::ResultStatus::RES_SUCCESS) {
+        emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
+    }
+}
+
+void RequestManager::setReadEnabledCOM2(QString ip, quint16 port)
+{
+    QJsonObject bodyObj;
+    bodyObj.insert("cmd", REQUEST_CMD_ID_SET_READ_ENABLED_SERIAL_2);
+    QJsonObject argsObj;
+    argsObj.insert("enabled", true);
+    bodyObj.insert("args", argsObj);
+
+    QJsonDocument bodyDoc(bodyObj);
+    QString requestBody = bodyDoc.toJson(QJsonDocument::Compact);
+
+    TedInfo tedInfo = { .m_ip = ip, .m_port = port };
+    QString replyBody;
+
+    RequestManager::ResultStatus result = send(tedInfo, requestBody, replyBody);
+
+    if (result == RequestManager::ResultStatus::RES_SUCCESS) {
+        emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
+    }
+}
+
+void RequestManager::setReadDisabledCOM2(QString ip, quint16 port)
+{
+    QJsonObject bodyObj;
+    bodyObj.insert("cmd", REQUEST_CMD_ID_SET_READ_ENABLED_SERIAL_2);
+    QJsonObject argsObj;
+    argsObj.insert("enabled", false);
+    bodyObj.insert("args", argsObj);
+
+    QJsonDocument bodyDoc(bodyObj);
+    QString requestBody = bodyDoc.toJson(QJsonDocument::Compact);
+
+    TedInfo tedInfo = { .m_ip = ip, .m_port = port };
+    QString replyBody;
+
+    RequestManager::ResultStatus result = send(tedInfo, requestBody, replyBody);
+
+    if (result == RequestManager::ResultStatus::RES_SUCCESS) {
+        emit replyReceived(ip, replyBody);
+    } else {
+        emit replyTimeout(ip);
+    }
+}
